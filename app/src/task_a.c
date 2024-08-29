@@ -140,6 +140,71 @@ void task_a_update(void *parameters)
 	#if (TEST_X == TEST_2)
 
 	/* Here Chatbot Artificial Intelligence generated code */
+	/* Includes ------------------------------------------------------------------*/
+	#include "main.h"
+
+	/* Private function prototypes -----------------------------------------------*/
+	void SystemClock_Config(void);
+	static void MX_GPIO_Init(void);
+
+	int main(void)
+	{
+	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	  HAL_Init();
+
+	  /* Configure the system clock */
+	  SystemClock_Config();
+
+	  /* Initialize all configured peripherals */
+	  MX_GPIO_Init();
+
+	  /* Infinite loop */
+	  while (1)
+	  {
+	    // Encender el LED
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	    // Retardo bloqueante de 500ms
+	    HAL_Delay(500);
+
+	    // Apagar el LED
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	    // Retardo bloqueante de 500ms
+	    HAL_Delay(500);
+	  }
+	}
+
+	/**
+	  * @brief System Clock Configuration
+	  * @retval None
+	  */
+	void SystemClock_Config(void)
+	{
+	  // Configuración del reloj del sistema, puede ser ajustada según tu necesidad
+	}
+
+	/**
+	  * @brief GPIO Initialization Function
+	  * @param None
+	  * @retval None
+	  */
+	static void MX_GPIO_Init(void)
+	{
+	  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	  /* GPIO Ports Clock Enable */
+	  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+	  /*Configure GPIO pin Output Level */
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+	  /*Configure GPIO pin : PA5 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_5;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	}
+
 
 	#endif
 }

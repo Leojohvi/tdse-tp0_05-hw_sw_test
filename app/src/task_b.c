@@ -111,6 +111,120 @@ void task_b_update(void *parameters)
 
 	/* Here Chatbot Artificial Intelligence generated code */
 
+	/* Includes ------------------------------------------------------------------*/
+	#include "main.h"
+
+	/* Private variables ---------------------------------------------------------*/
+	TIM_HandleTypeDef htim2;
+
+	/* Private function prototypes -----------------------------------------------*/
+	void SystemClock_Config(void);
+	static void MX_GPIO_Init(void);
+	static void MX_TIM2_Init(void);
+
+	/* Private user code ---------------------------------------------------------*/
+	volatile uint8_t ledState = 0;
+
+	int main(void)
+	{
+	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	  HAL_Init();
+
+	  /* Configure the system clock */
+	  SystemClock_Config();
+
+	  /* Initialize all configured peripherals */
+	  MX_GPIO_Init();
+	  MX_TIM2_Init();
+
+	  /* Start Timer Interrupt */
+	  HAL_TIM_Base_Start_IT(&htim2);
+
+	  /* Infinite loop */
+	  while (1)
+	  {
+	    // El código principal puede continuar ejecutando otras tareas sin bloquearse
+	  }
+	}
+
+	/**
+	  * @brief TIM2 Initialization Function
+	  * @param None
+	  * @retval None
+	  */
+	static void MX_TIM2_Init(void)
+	{
+	  /* Configure the TIM2 timer to trigger an interrupt every 500 ms */
+	  htim2.Instance = TIM2;
+	  htim2.Init.Prescaler = 7999;  // Prescaler para reducir la frecuencia del reloj
+	  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	  htim2.Init.Period = 4999;     // Cuenta hasta 5000 (500 ms)
+	  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+	}
+
+	/**
+	  * @brief GPIO Initialization Function
+	  * @param None
+	  * @retval None
+	  */
+	static void MX_GPIO_Init(void)
+	{
+	  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	  /* GPIO Ports Clock Enable */
+	  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+	  /*Configure GPIO pin Output Level */
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+	  /*Configure GPIO pin : PA5 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_5;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	}
+
+	/**
+	  * @brief This function handles TIM2 global interrupt.
+	  */
+	void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+	{
+	  if (htim->Instance == TIM2)
+	  {
+	    // Cambia el estado del LED
+	    ledState = !ledState;
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, ledState ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	  }
+	}
+
+	/**
+	  * @brief System Clock Configuration
+	  * @retval None
+	  */
+	void SystemClock_Config(void)
+	{
+	  // Configuración del reloj del sistema, puede ser ajustada según tu necesidad
+	}
+
+	/**
+	  * @brief Error Handler
+	  * @retval None
+	  */
+	void Error_Handler(void)
+	{
+	  while (1)
+	  {
+	    // Error Handling
+	  }
+	}
+
+
 	#endif
 
 	/* Update Task B Counter */
